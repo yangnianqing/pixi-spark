@@ -5,17 +5,10 @@ class Particle {
     this.y = y;
     this.color = color;
     this.firework = firework;
-    this.lifespan = 225;
-    if (this.firework) {
-      this.vel = {
-        x: 0,
-        y: -14
-      };
-    } else {
-      const radians = _.random(0, Math.PI*2);
-      const length = _.random(2, 10);
-      this.vel = {x: Math.cos(radians)*length, y: Math.sin(radians)*length};
-    }
+    this.vel = {
+      x: 0,
+      y: -14
+    };
     this.acc = {
       x: 0,
       y: 0
@@ -27,11 +20,6 @@ class Particle {
   }
 
   update() {
-    if (!this.firework) {
-      this.vel.x *= 0.9;
-      this.vel.y *= 0.9;
-      this.lifespan -= 4;
-    }
     console.log(this.vel, this.acc)
     this.vel.x += this.acc.x;
     this.vel.y += this.acc.y;
@@ -50,10 +38,6 @@ class Particle {
     this.g.drawCircle(this.x, this.y, 4);
     this.g.endFill();
   }
-
-  done() {
-    return this.lifespan < 0;
-  }
 }
 
 class Firework {
@@ -63,50 +47,18 @@ class Firework {
       luminosity: 'light'
     }));
     this.firework = new Particle(g, _.random(0, width), height, this.color, true);
-    this.exploded = false;
-    this.particles = [];
-  }
-
-  done() {
-    return this.exploded && this.particles.length === 0;
   }
 
   update() {
-    if (!this.exploded) {
-      this.firework.applyForce({
-        x: 0,
-        y: 0.2
-      });
-      this.firework.update();
-      if (this.firework.vel.y >= 0) {
-        this.exploded = true;
-        this.explode()
-      }
-    }
-    for (let i = this.particles.length -1 ; i>= 0; i--) {
-      this.particles[i].applyForce({x: 0, y: 0.2})
-      this.particles[i].update()
-      if (this.particles[i].done()) {
-        this.particles.splice(i, 1)
-      }
-    }
-  }
-
-  explode() {
-    for (let i = 0; i< 100; i++) {
-      const p = new Particle(this.g, this.firework.x, this.firework.y, this.color, false);
-      this.particles.push(p);
-    }
+    this.firework.applyForce({
+      x: 0,
+      y: 0.2
+    });
+    this.firework.update();
   }
 
   show() {
-    if (!this.exploded) {
-      this.firework.show();
-    }
-
-    for (let i = 0; i < this.particles.length; i++) {
-      this.particles[i].show();
-    }
+    this.firework.show();
   }
 }
 
@@ -148,9 +100,6 @@ function makeFireworks(app) {
     for (let i = fireworks.length - 1; i >= 0; i--) {
       fireworks[i].update()
       fireworks[i].show()
-      if (fireworks[i].done()) {
-        fireworks.splice(i, 1);
-      }
     }
     app.renderer.render(app.stage, backTexture2);
   }
@@ -159,7 +108,7 @@ function makeFireworks(app) {
   }
 }
 
-function step3() {
+function step2() {
   const app = new PIXI.Application({
     width: 800,
     height: 800,
@@ -171,4 +120,4 @@ function step3() {
   fireworks.play();
 }
 
-step3()
+step2()

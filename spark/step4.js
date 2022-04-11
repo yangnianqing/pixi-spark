@@ -9,7 +9,7 @@ class Particle {
     if (this.firework) {
       this.vel = {
         x: 0,
-        y: -14
+        y: _.random(-15, -12)
       };
     } else {
       const radians = _.random(0, Math.PI*2);
@@ -47,7 +47,7 @@ class Particle {
 
   show() {
     this.g.beginFill(this.color);
-    this.g.drawCircle(this.x, this.y, 4);
+    this.g.drawCircle(this.x, this.y, this.firework ? 4 : 2);
     this.g.endFill();
   }
 
