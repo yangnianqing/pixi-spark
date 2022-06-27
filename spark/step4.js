@@ -126,6 +126,25 @@ function makeFireworks(app) {
     resolution: window.devicePixelRatio || 1
   });
   const backSprite = new PIXI.Sprite(backTexture1);
+  
+  let isPause = false;
+  graphic.on('pointertap', () => {
+    if (isPause)
+      resume();
+    else
+      pause();
+  });
+
+
+  function pause() {
+    isPause = true;
+    app.ticker.remove(update);
+  }
+
+  function resume() {
+    isPause = false;
+    app.ticker.add(update);
+  }
 
   function play() {
     app.stage.addChild(backSprite);
